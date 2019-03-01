@@ -20,7 +20,6 @@ for i in range(n):
 # print(len(pv))
 # print(int(round((len(pv)-0.1)/2,0)))
 
-
 def dist(x, y):
     # dist function using hash maybe.
     return 0
