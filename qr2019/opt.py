@@ -1,4 +1,12 @@
 import random
+from sys import argv
+
+script, DEBUG = argv
+
+DEBUG = int(DEBUG)
+
+NITER = 50
+
 # print(fin)
 n = int(input())
 
@@ -8,7 +16,7 @@ pv = [] # V
 phs = []
 pvs = []
 
-# s1 = set(["a","b","c"])
+# s1 = set(["a","e","f"])
 # s2 = set(["d","b","c"])
 def score_v(s1, s2):
     return len(s1.union(s2))
@@ -18,11 +26,11 @@ def score(s1, s2):
     s12 = s1-s2
     s21 = s2-s1
     # print(ins)
-    # rint(s12)
+    # print(s12)
     # print(s21)
     return min(len(ins), len(s12), len(s21))
-# score(s1, s2)
 
+# print(score(s1, s2))
 
 for i in range(n):
     p = input().split(" ")
@@ -40,11 +48,12 @@ i = 0
 if len(pvs) > 0:
     pi = pvs[i]
 # set to random init later
-while len(pv) > 0:  # for b
+while len(pv) > 0:
     # print("cycle count:", len(ph))
+    pi = pvs[0]
     t = 1
     st = score_v(pi, pvs[1])
-    for j in range(1,min(500,len(pv))):
+    for k in range(1,min(NITER,len(pv))):
         # print(j)
         # j is index
         # choose random one for small search
@@ -59,10 +68,9 @@ while len(pv) > 0:  # for b
     # break
     vtoh = str(pv[0][0]) + " " + str(pv[t][0]) # index
     # print(vtoh)
-    phs.append(pi.union(pvs[j]))
+    phs.append(pvs[0].union(pvs[j]))
     ph.append([vtoh])
     # print(ph)
-    pi = pvs[0]
     del pv[t]
     del pvs[t]
     del pv[0]
@@ -86,6 +94,8 @@ print(nslide)
 i = 0
 pi = phs[i]
 # set to random init later
+fscore = 0
+pi0 = ph[i][0]
 
 while len(ph) > 0:  # for b
     # print("cycle count:", len(ph))
@@ -93,20 +103,29 @@ while len(ph) > 0:  # for b
     # print(pi, phs[k])
     # break
     st = score(pi, phs[0])
-    # print(st)
-    for j in range(min(500,len(ph))):
+    for k in range(min(NITER,len(ph))):
         # print(j)
         # j is index
-        if min(500, len(pv)) > 1:
-            j = random.randint(0, len(pv))
+        if min(NITER, len(ph)) > 1:
+            j = random.randint(0, len(ph)-1)
         else:
             j = 0
         sj = score(pi, phs[j])
         if sj > st:
             t = j
             st = sj
-    # print("best score:" , st, ph[t][0])
-    print(ph[t][0]) # index
-    pi = phs[t]
+    if DEBUG:
+        fscore += st
+        print("best score:" , st,"using:{}, {}".format(pi0, ph[t][0]))
+        pi0 = ph[t][0]
+
+    if not DEBUG:
+        print(ph[t][0]) # index
+    pi = phs[t].copy()
     del ph[t]
     del phs[t]
+
+
+if DEBUG:
+    print(fscore)
+
