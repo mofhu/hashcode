@@ -2,6 +2,7 @@
 *.in
 *.out
 *.pdf
+*.txt  # input for hashcode
 *.DS_Store
 
 # Byte-compiled / optimized / DLL files

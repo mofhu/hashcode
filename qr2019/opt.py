@@ -1,3 +1,4 @@
+import random
 # print(fin)
 n = int(input())
 
@@ -36,15 +37,20 @@ for i in range(n):
 
 # all H for b.in
 i = 0
-pi = pvs[i]
+if len(pvs) > 0:
+    pi = pvs[i]
 # set to random init later
 while len(pv) > 0:  # for b
     # print("cycle count:", len(ph))
     t = 1
     st = score_v(pi, pvs[1])
-    for j in range(1,min(550,len(pv))):
+    for j in range(1,min(500,len(pv))):
         # print(j)
         # j is index
+        # choose random one for small search
+        j = random.randint(0, len(pv)-1)
+        if j == 0:
+            j += 1
         sj = score_v(pi, pvs[j])
         if sj > st:
             t = j
@@ -88,9 +94,13 @@ while len(ph) > 0:  # for b
     # break
     st = score(pi, phs[0])
     # print(st)
-    for j in range(min(550,len(ph))):
+    for j in range(min(500,len(ph))):
         # print(j)
         # j is index
+        if min(500, len(pv)) > 1:
+            j = random.randint(0, len(pv))
+        else:
+            j = 0
         sj = score(pi, phs[j])
         if sj > st:
             t = j
