@@ -1,11 +1,11 @@
 import random
 from sys import argv
 
-script, DEBUG, NITER, THRESHOLD = argv
+script, DEBUG, NITER = argv
 
 DEBUG = int(DEBUG)
 NITER = int(NITER)
-THRESHOLD = int(THRESHOLD)
+
 # print(fin)
 n = int(input())
 
@@ -96,42 +96,32 @@ pi = phs[i]  # set
 fscore = 0
 pi0 = ph[i][0]
 
-while len(ph) > 0:  # for b
-    # print("cycle count:", len(ph))
-    t = 0
-    # print(pi, phs[k])
-    # break
-    if i == 0:
-        st = score(pi, phs[1])
-        i = 1
-    else:
-        st = score(pi, phs[0])
+scores = {}
+best_scores = {}
 
-    for k in range(min(NITER,len(ph))):
-        # print(j)
-        # j is index
-        if min(NITER, len(ph)) > 1:
-            j = random.randint(0, len(ph)-1)
+for i in range(len(ph)):
+    si = 0
+    for j in range(i, len(ph)):
+        sij = score(pi, phs[j])
+        if sij not in scores:
+            scores[sij] = 1
         else:
-            j = 0
-        sj = score(pi, phs[j])
-        if sj > st:
-            t = j
-            st = sj
-        if st > THRESHOLD:
-            break
-    if DEBUG:
-        fscore += st
-        print("best score:" , st,"using:{}, {}".format(pi0, ph[t][0]))
-        pi0 = ph[t][0]
+            scores[sij] += 1
+        if sij > si:
+            si = sij
+    if i % 100 == 0:
+        print(i)
+        print(scores)
+        print(best_scores)
+
+    if si not in best_scores:
+        best_scores[si] = 1
     else:
-        print(ph[t][0]) # index
+        best_scores[si] += 1
 
-    pi = phs[t].copy()
-    pi0 = ph[t][0]
-    del ph[t]
-    del phs[t]
-
+# sampling!!!
+print(scores)
+print(best_scores)
 
 if DEBUG:
     print(fscore)
