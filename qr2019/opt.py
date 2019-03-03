@@ -5,7 +5,7 @@ script, DEBUG = argv
 
 DEBUG = int(DEBUG)
 
-NITER = 50
+NITER = 500
 
 # print(fin)
 n = int(input())
@@ -68,7 +68,7 @@ while len(pv) > 0:
     # break
     vtoh = str(pv[0][0]) + " " + str(pv[t][0]) # index
     # print(vtoh)
-    phs.append(pvs[0].union(pvs[j]))
+    phs.append(pvs[0].union(pvs[t]))
     ph.append([vtoh])
     # print(ph)
     del pv[t]
@@ -92,7 +92,7 @@ def dist(x, y):
 nslide = len(ph) + int(round((len(pv)-0.1)/2,0))
 print(nslide)
 i = 0
-pi = phs[i]
+pi = phs[i]  # set
 # set to random init later
 fscore = 0
 pi0 = ph[i][0]
@@ -102,7 +102,12 @@ while len(ph) > 0:  # for b
     t = 0
     # print(pi, phs[k])
     # break
-    st = score(pi, phs[0])
+    if i == 0:
+        st = score(pi, phs[1])
+        i = 1
+    else:
+        st = score(pi, phs[0])
+
     for k in range(min(NITER,len(ph))):
         # print(j)
         # j is index
@@ -118,10 +123,11 @@ while len(ph) > 0:  # for b
         fscore += st
         print("best score:" , st,"using:{}, {}".format(pi0, ph[t][0]))
         pi0 = ph[t][0]
-
-    if not DEBUG:
+    else:
         print(ph[t][0]) # index
+
     pi = phs[t].copy()
+    pi0 = ph[t][0]
     del ph[t]
     del phs[t]
 
