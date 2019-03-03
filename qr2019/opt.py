@@ -1,11 +1,11 @@
 import random
 from sys import argv
 
-script, DEBUG = argv
+script, DEBUG, NITER = argv
 
 DEBUG = int(DEBUG)
 
-NITER = 500
+NITER = int(NITER)
 
 # print(fin)
 n = int(input())
