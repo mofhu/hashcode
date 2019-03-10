@@ -41,6 +41,8 @@ for i in range(n):
         pv.append([i]+ p)
         pvs.append(set(p[2:]))
 # print(phs)
+print(len(ph))
+print(len(pv))
 
 # all H for b.in
 i = 0
@@ -79,8 +81,8 @@ while len(pv) > 0:
 # print(ph)
 # print(pv)
 # print(len(photos))
-# print(len(ph))
-# print(len(pv))
+print(len(ph))
+print(len(pv))
 # print(int(round((len(pv)-0.1)/2,0)))
 
 def dist(x, y):
