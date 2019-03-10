@@ -14,6 +14,7 @@ ph = [] # H
 pv = [] # V
 phs = []
 pvs = []
+tag_dict = {}
 
 # s1 = set(["a","e","f"])
 # s2 = set(["d","b","c"])
@@ -33,14 +34,21 @@ def score(s1, s2):
 
 for i in range(n):
     p = input().split(" ")
-    photos.append([i]+ p)
     if p[0] == "H":
         ph.append([i]+ p)
-        phs.append(set(p[2:]))
+        tags = set(p[2:])
+        phs.append(tags)
+        for tag in tags:
+            if tag not in tag_dict:
+                tag_dict[tag] = set([i])
+            else:
+                tag_dict[tag].add(i)
+        # print(tag_dict)
     else:
         pv.append([i]+ p)
         pvs.append(set(p[2:]))
 # print(phs)
+
 
 # all H for b.in
 i = 0
@@ -75,6 +83,7 @@ while len(pv) > 0:
     del pv[0]
     del pvs[0]
 
+
 # print(photos)
 # print(ph)
 # print(pv)
@@ -87,6 +96,7 @@ def dist(x, y):
     # dist function using hash maybe.
     return 0
 
+
 # all H for b.in
 nslide = len(ph) + int(round((len(pv)-0.1)/2,0))
 print(nslide)
@@ -94,43 +104,58 @@ i = 0
 pi = phs[i]  # set
 # set to random init later
 fscore = 0
-pi0 = ph[i][0]
+pi0 = ph[i]
+used_index = set()
+unused_index = [i for i in range(len(ph))]
 
-while len(ph) > 0:  # for b
+
+while len(unused_index) > 0:  # for b
     # print("cycle count:", len(ph))
-    t = 0
+    index = pi0[0]
+    # print(pi0[3:])
+    best_friends = {}
+    for tag in pi:
+        if len(tag_dict[tag]) > 1:
+            # print(tag)
+            # print(tag_dict[tag])
+            for i in tag_dict[tag]:
+                if i not in used_index:
+                    if i not in best_friends:
+                        best_friends[i] = 1
+                    else:
+                        best_friends[i] += 1
+                        if best_friends[i] == 3:  # greedy, 3 is magic number for case b
+                            j = i
+                            break
+    # print(best_friends)
+    if j == index:  # no 3 found
+        # print(index, best_friends)
+        # print("debug")
+        best_len = 0
+        for k in best_friends:
+            if best_friends[k] > best_len:
+                best_len = best_friends[k]
+                j = k
+    if j == index:
+        # blank index, new random j
+        j = random.randint(0, len(unused_index)-1)
+        j = unused_index[j]
+    # print(j)
     # print(pi, phs[k])
     # break
-    if i == 0:
-        st = score(pi, phs[1])
-        i = 1
-    else:
-        st = score(pi, phs[0])
-
-    for k in range(min(NITER,len(ph))):
-        # print(j)
-        # j is index
-        if min(NITER, len(ph)) > 1:
-            j = random.randint(0, len(ph)-1)
-        else:
-            j = 0
-        sj = score(pi, phs[j])
-        if sj > st:
-            t = j
-            st = sj
-        if st > THRESHOLD:
-            break
+    # print(pi, phs[j])
     if DEBUG:
+        st = score(pi, phs[j])
         fscore += st
-        print("best score:" , st,"using:{}, {}".format(pi0, ph[t][0]))
-        pi0 = ph[t][0]
+        print("best score:" , st,"using:{}, {}".format(index, j))
+        pi0 = ph[j]
     else:
-        print(ph[t][0]) # index
-
-    pi = phs[t].copy()
-    pi0 = ph[t][0]
-    del ph[t]
-    del phs[t]
+        print(j) # index
+    i = j
+    pi = phs[j].copy()
+    pi0 = ph[j]
+    used_index.add(j)
+    unused_index.remove(j)
 
 
 if DEBUG:
